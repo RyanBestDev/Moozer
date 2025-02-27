@@ -1,17 +1,13 @@
-import { BodyHandler } from 'elysia';
+import { Context } from 'elysia';
 import { User, Session } from 'better-auth/types';
 import { PrismaClient } from '@prisma/client';
 import { z } from 'zod';
 
 const prisma = new PrismaClient();
 
-type SetStatus = (code: number) => void;
-
-interface AuthPayload {
+interface AuthPayload extends Context {
 	user: User; // or whatever type your user is
 	session: Session;
-	body: BodyHandler;
-	setStatus: SetStatus;
 }
 
 const createCattleSchema = z.object({
@@ -74,9 +70,9 @@ const updateCattleSchema = z
 		}
 	);
 
-export const createCattle = async ({ user, session, body, setStatus }: AuthPayload) => {
+export const createCattle = async ({ user, session, body, set }: AuthPayload) => {
 	if (!user || !session) {
-		setStatus(401);
+		set.status = 401;
 		return {
 			error: 'Unauthorized',
 		};
@@ -84,7 +80,7 @@ export const createCattle = async ({ user, session, body, setStatus }: AuthPaylo
 	const parsed = createCattleSchema.safeParse(body);
 	if (!parsed.success) {
 		const error = parsed.error.issues[0].message;
-		setStatus(400);
+		set.status = 400;
 		return {
 			error,
 		};
@@ -92,7 +88,7 @@ export const createCattle = async ({ user, session, body, setStatus }: AuthPaylo
 
 	const { name, breed, weight, age, gender, description } = parsed.data;
 	if (!name || !breed || !weight || !age || !gender || !description) {
-		setStatus(400);
+		set.status = 400;
 		return {
 			error: 'All fields are required',
 		};
@@ -119,16 +115,16 @@ export const createCattle = async ({ user, session, body, setStatus }: AuthPaylo
 			message: 'Cattle created successfully',
 		};
 	} catch (error) {
-		setStatus(500);
+		set.status = 500;
 		return {
 			error: 'Error creating cattle: ' + error,
 		};
 	}
 };
 
-export const cattle = async ({ user, session, body, setStatus }: AuthPayload) => {
+export const cattle = async ({ user, session, body, set }: AuthPayload) => {
 	if (!user || !session) {
-		setStatus(401);
+		set.status = 401;
 		return {
 			error: 'Unauthorized',
 		};
@@ -141,7 +137,7 @@ export const cattle = async ({ user, session, body, setStatus }: AuthPayload) =>
 	});
 
 	if (!cattle) {
-		setStatus(404);
+		set.status = 404;
 		return {
 			error: 'No cattle found',
 		};
@@ -165,12 +161,12 @@ export const cattle = async ({ user, session, body, setStatus }: AuthPayload) =>
 	};
 };
 
-export const newCattleData = async ({ user, session, body, setStatus }: AuthPayload) => {
+export const newCattleData = async ({ user, session, body, set }: AuthPayload) => {
 	{
 		const parsed = cattleDataSchema.safeParse(body);
 		if (!parsed.success) {
 			const error = parsed.error.issues[0].message;
-			setStatus(400);
+			set.status = 400;
 			return {
 				error: error,
 			};
@@ -206,7 +202,7 @@ export const newCattleData = async ({ user, session, body, setStatus }: AuthPayl
 		}
 
 		if (error) {
-			setStatus(500);
+			set.status = 500;
 			return {
 				error: 'Error creating cattle data',
 			};
@@ -218,9 +214,9 @@ export const newCattleData = async ({ user, session, body, setStatus }: AuthPayl
 	}
 };
 
-export const updateCattle = async ({ user, session, body, setStatus }: AuthPayload) => {
+export const updateCattle = async ({ user, session, body, set }: AuthPayload) => {
 	if (!user || !session) {
-		setStatus(401);
+		set.status = 401;
 		return {
 			error: 'Unauthorized',
 		};
@@ -229,7 +225,7 @@ export const updateCattle = async ({ user, session, body, setStatus }: AuthPaylo
 	const parsed = updateCattleSchema.safeParse(body);
 	if (!parsed.success) {
 		const error = parsed.error.issues[0].message;
-		setStatus(400);
+		set.status = 400;
 		return {
 			error: error,
 		};
@@ -242,13 +238,13 @@ export const updateCattle = async ({ user, session, body, setStatus }: AuthPaylo
 	});
 
 	if (!getCattle) {
-		setStatus(404);
+		set.status = 404;
 		return {
 			error: 'Cattle not found',
 		};
 	}
 	if (getCattle.userId !== user.id) {
-		setStatus(403);
+		set.status = 403;
 		return {
 			error: 'You are not allowed to update this cattle',
 		};
@@ -267,7 +263,7 @@ export const updateCattle = async ({ user, session, body, setStatus }: AuthPaylo
 			},
 		});
 	} catch (error) {
-		setStatus(500);
+		set.status = 500;
 		return {
 			error: 'Error updating cattle: ' + error,
 		};
