@@ -17,7 +17,7 @@ export const About = () => {
 				<div className='grid items-center gap-16 lg:grid-cols-2 xl:gap-24'>
 					<div className='relative'>
 						<div className='flex justify-center'>
-							<div className='h-[40rem] w-full flex items-center justify-center '>
+							<div className='h-[40rem] max-w-screen flex items-center justify-center '>
 								<PinContainer
 									title='arduino.cc/uno-r2-wifi'
 									href='https://store.arduino.cc/products/uno-r4-wifi'
