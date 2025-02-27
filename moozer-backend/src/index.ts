@@ -9,7 +9,7 @@ import { userMiddleware } from './middleware/auth-middleware';
 import 'dotenv/config';
 import { cattle, updateCattle, createCattle, newCattleData } from './controllers/cattle';
 
-const app = new Elysia();
+const app = new Elysia({ prefix: '/api' });
 
 app.use(
 	cors({
