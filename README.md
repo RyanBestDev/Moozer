@@ -1,0 +1,1 @@
+Moozer is an AI-Powered smart collar that tracks the health of cattle. It also comes with an abundance of other features, and a website where data is uploaded to in order to streamline the process of analyzing statistics about the health of your cattle.
