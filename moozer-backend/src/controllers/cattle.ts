@@ -180,6 +180,8 @@ export const newCattleData = async ({ user, session, body, set }: AuthPayload) =
 					},
 				});
 
+				console.log(updated);
+
 				if (!updated) {
 					set.status = 404;
 					return {
@@ -187,6 +189,7 @@ export const newCattleData = async ({ user, session, body, set }: AuthPayload) =
 					};
 				}
 			} catch (error) {
+				console.log(error);
 				error = true;
 			}
 		}
