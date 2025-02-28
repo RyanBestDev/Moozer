@@ -19,38 +19,7 @@ const createCattleSchema = z.object({
 	description: z.string().min(1, 'Description is required'),
 });
 
-const cattleDataSchema = z.array(
-	z.object({
-		latitude: z.number({
-			required_error: 'Latitude is required',
-			invalid_type_error: 'Latitude must be a number',
-		}),
-		longitude: z.number({
-			required_error: 'Longitude is required',
-			invalid_type_error: 'Longitude must be a number',
-		}),
-		lightLevel: z.number({
-			required_error: 'Light level is required',
-			invalid_type_error: 'Light level must be a number',
-		}),
-		temperature: z.number({
-			required_error: 'Temperature is required',
-			invalid_type_error: 'Temperature must be a number',
-		}),
-		behaviorState: z.string({
-			required_error: 'Behavior state is required',
-			invalid_type_error: 'Behavior state must be a string',
-		}),
-		timestamp: z.date({
-			required_error: 'Timestamp is required',
-			invalid_type_error: 'Timestamp must be a valid date',
-		}),
-		cattleId: z.string({
-			required_error: 'Cattle ID is required',
-			invalid_type_error: 'Cattle ID must be a string',
-		}),
-	})
-);
+const cattleDataSchema = z.array(z.string());
 
 const updateCattleSchema = z
 	.object({
@@ -175,10 +144,23 @@ export const newCattleData = async ({ user, session, body, set }: AuthPayload) =
 		const error: boolean = false;
 
 		for await (const data of parsed.data) {
-			const { latitude, longitude, lightLevel, behaviorState, timestamp, cattleId, temperature } = data;
-			if (!latitude || !longitude || !lightLevel || !behaviorState || !timestamp || !cattleId) {
-				continue;
+			const split = data.split('_');
+
+			const cattleId = split[6];
+
+			if (!cattleId) {
+				set.status = 400;
+				return {
+					error: 'Cattle ID is required',
+				};
 			}
+
+			const behaviorState = split[0];
+			const temperature = Number(split[1]);
+			const latitude = Number(split[2]);
+			const longitude = Number(split[3]);
+			const date = split[4];
+			const lightLevel = Number(split[5]);
 
 			try {
 				await prisma.cattle.update({
@@ -190,7 +172,7 @@ export const newCattleData = async ({ user, session, body, set }: AuthPayload) =
 								longitude,
 								lightLevel,
 								behaviorState,
-								timestamp,
+								timestamp: date,
 								temperature,
 							},
 						},
