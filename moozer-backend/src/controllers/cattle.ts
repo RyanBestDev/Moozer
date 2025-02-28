@@ -134,6 +134,7 @@ export const newCattleData = async ({ user, session, body, set }: AuthPayload) =
 	{
 		console.log(body);
 		const parsed = cattleDataSchema.safeParse(body);
+		let cattleId;
 		if (!parsed.success) {
 			const error = parsed.error.issues[0].message;
 			set.status = 400;
@@ -147,7 +148,9 @@ export const newCattleData = async ({ user, session, body, set }: AuthPayload) =
 		for await (const data of parsed.data) {
 			const split = data.split('_');
 
-			const cattleId = split[6];
+			if (!cattleId) {
+				cattleId = split[6];
+			}
 
 			if (!cattleId) {
 				set.status = 400;
@@ -179,8 +182,6 @@ export const newCattleData = async ({ user, session, body, set }: AuthPayload) =
 						},
 					},
 				});
-
-				console.log(updated);
 
 				if (!updated) {
 					set.status = 404;
