@@ -166,6 +166,8 @@ export const newCattleData = async ({ user, session, body, set }: AuthPayload) =
 			const date = split[4];
 			const lightLevel = Number(split[5]);
 
+			console.log(date);
+
 			try {
 				const updated = await prisma.cattle.update({
 					where: { id: cattleId },
