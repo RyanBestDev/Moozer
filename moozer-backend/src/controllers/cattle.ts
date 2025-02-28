@@ -132,6 +132,7 @@ export const cattle = async ({ user, session, body, set }: AuthPayload) => {
 
 export const newCattleData = async ({ user, session, body, set }: AuthPayload) => {
 	{
+		console.log(body);
 		const parsed = cattleDataSchema.safeParse(body);
 		if (!parsed.success) {
 			const error = parsed.error.issues[0].message;
@@ -179,12 +180,12 @@ export const newCattleData = async ({ user, session, body, set }: AuthPayload) =
 					},
 				});
 
-                if (!updated) {
-                    set.status = 404;
-                    return {
-                        error: 'Cattle not found',
-                    };
-                }
+				if (!updated) {
+					set.status = 404;
+					return {
+						error: 'Cattle not found',
+					};
+				}
 			} catch (error) {
 				error = true;
 			}
