@@ -163,7 +163,7 @@ export const newCattleData = async ({ user, session, body, set }: AuthPayload) =
 			const lightLevel = Number(split[5]);
 
 			try {
-				await prisma.cattle.update({
+				const updated = await prisma.cattle.update({
 					where: { id: cattleId },
 					data: {
 						cattleData: {
@@ -178,6 +178,13 @@ export const newCattleData = async ({ user, session, body, set }: AuthPayload) =
 						},
 					},
 				});
+
+                if (!updated) {
+                    set.status = 404;
+                    return {
+                        error: 'Cattle not found',
+                    };
+                }
 			} catch (error) {
 				error = true;
 			}
