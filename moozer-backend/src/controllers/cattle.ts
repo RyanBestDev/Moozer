@@ -173,7 +173,7 @@ export const newCattleData = async ({ user, session, body, set }: AuthPayload) =
 								longitude,
 								lightLevel,
 								behaviorState,
-								timestamp: date,
+								timestamp: date == 'INVALID' ? null : date,
 								temperature,
 							},
 						},

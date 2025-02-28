@@ -91,7 +91,7 @@ model CattleData {
   lightLevel    Int
   temperature   Float
   behaviorState String
-  timestamp     DateTime
+  timestamp     DateTime?
   cattleId      String   @db.ObjectId
   cattle        Cattle   @relation(fields: [cattleId], references: [id], onDelete: Cascade)
 }
