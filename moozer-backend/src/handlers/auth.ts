@@ -26,7 +26,7 @@ export const auth = betterAuth({
 	baseURL: 'http://localhost:3000',
 	basePath: '/api/auth',
 	trustedOrigins: [
-		//
+		// final deployment!
 		'http://localhost:3000/api/auth',
 		'http://localhost:3000',
 		'http://localhost:3000',
