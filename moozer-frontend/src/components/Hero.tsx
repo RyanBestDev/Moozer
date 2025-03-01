@@ -49,7 +49,7 @@ export const Hero = () => {
 
 	return (
 		<section
-			className='relative py-8 lg:py-24'
+			className='relative py-8 overflow-x-hidden lg:py-24'
 			id='home'
 		>
 			<div className='container relative z-10 pb-8'>

@@ -7,7 +7,7 @@ import { logger } from '@rasla/logify';
 import authView from './handlers/authView';
 import { userMiddleware } from './middleware/auth-middleware';
 import 'dotenv/config';
-import { cattle, updateCattle, createCattle, newCattleData } from './controllers/cattle';
+import { cattle, updateCattle, createCattle, newCattleData, cattleStatistics } from './controllers/cattle';
 
 const app = new Elysia({ prefix: '/api' });
 
@@ -42,10 +42,12 @@ app.all('/auth/*', authView);
 app.derive(({ request }) => userMiddleware(request));
 
 const cattles = new Elysia({ prefix: '/cattle' })
+
 	.get('/get', cattle)
 	.post('/update-cattle', updateCattle)
 	.post('/create-cattle', createCattle)
-	.post('/new-cattle', newCattleData);
+	.post('/new-cattle', newCattleData)
+	.get('/cattle-statistics/:cattleId', cattleStatistics);
 
 app.use(cattles);
 

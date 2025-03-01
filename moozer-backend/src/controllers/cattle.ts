@@ -99,6 +99,8 @@ export const cattle = async ({ user, session, body, set }: AuthPayload) => {
 		};
 	}
 
+	console.log(process.env.DEV);
+
 	const cattle = await prisma.cattle.findMany({
 		where: {
 			userId: user.id,
@@ -266,5 +268,109 @@ export const updateCattle = async ({ user, session, body, set }: AuthPayload) =>
 	}
 	return {
 		message: 'Cattle updated successfully',
+	};
+};
+
+export const cattleStatistics = async ({ user, session, body, set, params }: AuthPayload) => {
+	if (!user || !session) {
+		set.status = 401;
+		return {
+			error: 'Unauthorized',
+		};
+	}
+
+	const cattleId = params.cattleId;
+	const getCattle = await prisma.cattle.findUnique({
+		where: { id: cattleId },
+		select: {
+			name: true,
+			cattleData: {
+				take: 2880,
+				orderBy: {
+					timestamp: 'desc',
+				},
+			},
+			userId: true,
+		},
+	});
+
+	if (!getCattle) {
+		set.status = 404;
+
+		return {
+			error: 'Failed to get cattle',
+		};
+	}
+
+	if (getCattle.userId !== user.id) {
+		set.status = 403;
+		return {
+			error: 'You are not allowed to view this cattle',
+		};
+	}
+
+	let totalMinsInIntenseLight = 0;
+	let totalMinsInModerateLight = 0;
+	let totalMinsInLowLight = 0;
+
+	let totalMinsInRest = 0;
+	let totalMinsInGrazing = 0;
+	let totalMinsInOther = 0;
+
+	let minTemp = Number.POSITIVE_INFINITY;
+	let maxTemp = Number.NEGATIVE_INFINITY;
+	let avgTemp = 0;
+
+	let dayInfo = [];
+
+	for (const data of getCattle.cattleData) {
+		if (data.lightLevel == 0) {
+			totalMinsInLowLight += 0.5;
+		} else if (data.lightLevel == 1) {
+			totalMinsInModerateLight += 0.5;
+		} else if (data.lightLevel == 2) {
+			totalMinsInIntenseLight += 0.5;
+		}
+
+		if (data.behaviorState == 'resting') {
+			totalMinsInRest += 0.5;
+		} else if (data.behaviorState == 'grazing') {
+			totalMinsInGrazing += 0.5;
+		} else if (data.behaviorState == 'other') {
+			totalMinsInOther += 0.5;
+		}
+
+		if (minTemp > data.temperature) {
+			minTemp = data.temperature;
+		} else if (maxTemp < data.temperature) {
+			maxTemp = data.temperature;
+		}
+
+		avgTemp += data.temperature;
+
+		dayInfo.push({
+			date: new Date(String(data.timestamp)).toString(),
+			lightLevel: data.lightLevel,
+			temperature: data.temperature,
+			latitude: data.latitude,
+			longitude: data.longitude,
+			behaviorState: data.behaviorState,
+		});
+	}
+
+	return {
+		message: 'Cattle statistics retrieved successfully',
+		dayInfo,
+		name: getCattle.name,
+		totalMinsInIntenseLight,
+		totalMinsInModerateLight,
+		totalMinsInLowLight,
+		totalMinsInRest,
+		totalMinsInGrazing,
+		totalMinsInOther,
+		minTemp,
+		maxTemp,
+		avgTemp: avgTemp / getCattle.cattleData.length,
+		username: user.name,
 	};
 };

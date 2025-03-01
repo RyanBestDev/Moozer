@@ -7,6 +7,7 @@ import { SignUp } from './pages/SignUp.tsx';
 import { Login } from './pages/Login.tsx';
 import { Recovery } from './pages/Recovery.tsx';
 import Dashboard from './pages/Dashboard.tsx';
+import Cattle from './pages/Cattle.tsx';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
 	<React.StrictMode>
@@ -31,6 +32,10 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 				<Route
 					path='/dashboard'
 					element={<Dashboard />}
+				/>
+				<Route
+					path='/dashboard/:cattleId'
+					element={<Cattle />}
 				/>
 			</Routes>
 		</BrowserRouter>
