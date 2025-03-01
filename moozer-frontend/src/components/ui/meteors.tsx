@@ -14,7 +14,7 @@ export const Meteors = ({ number = 20, className = '' }) => {
 	const meteors = Array.from({ length: number });
 
 	return (
-		<>
+		<div className=''>
 			{meteors.map((_, idx) => {
 				const color = meteorColors[Math.floor(Math.random() * meteorColors.length)]; // Pick a random color
 
@@ -46,6 +46,6 @@ export const Meteors = ({ number = 20, className = '' }) => {
 					</span>
 				);
 			})}
-		</>
+		</div>
 	);
 };

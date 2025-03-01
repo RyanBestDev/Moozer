@@ -49,7 +49,7 @@ export const Hero = () => {
 
 	return (
 		<section
-			className='relative py-8 overflow-x-hidden lg:py-24'
+			className='relative py-8 overflow-x-clip lg:py-24'
 			id='home'
 		>
 			<div className='container relative z-10 pb-8'>
@@ -125,7 +125,7 @@ export const Hero = () => {
 							<IoMdTimer size='2rem' />
 						</div>
 
-						<p className='mt-3 text-4xl font-semibold'>5 Months</p>
+						<p className='mt-3 text-4xl font-semibold'>4 Months</p>
 						<p className='mt-1 text-base-content/80'>Development Time</p>
 					</div>
 				</div>
