@@ -99,8 +99,6 @@ export const cattle = async ({ user, session, body, set }: AuthPayload) => {
 		};
 	}
 
-	console.log(process.env.DEV);
-
 	const cattle = await prisma.cattle.findMany({
 		where: {
 			userId: user.id,

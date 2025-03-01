@@ -410,7 +410,6 @@ export default function Cattle() {
 		setLoading(false);
 	};
 
-	// Function to get color based on state
 	const getColor = (state: string) => {
 		switch (state) {
 			case 'grazing':
@@ -443,7 +442,7 @@ export default function Cattle() {
 							pathOptions={{
 								color: getColor(item.behaviorState),
 								fillColor: getColor(item.behaviorState),
-								fillOpacity: 0.2,
+								fillOpacity: 0.1,
 							}}
 						>
 							<Popup>

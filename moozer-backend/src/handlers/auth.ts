@@ -31,5 +31,7 @@ export const auth = betterAuth({
 		'http://localhost:3000',
 		'http://localhost:3000',
 		'http://localhost:5173',
+		'https://moozer.us',
+		'https://moozer.us/api/auth',
 	],
 });
