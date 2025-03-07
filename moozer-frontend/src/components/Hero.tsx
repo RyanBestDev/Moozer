@@ -103,7 +103,7 @@ export const Hero = () => {
 						<div className='inline-block p-3 transition-all rounded bg-primary/10 hover:bg-primary/25'>
 							<GiNightSleep size='2rem' />
 						</div>
-						<p className='mt-3 text-4xl font-semibold'>91.43%</p>
+						<p className='mt-3 text-4xl font-semibold'>91.18%</p>
 						<p className='mt-1 text-base-content/80'>Accuracy</p>
 					</div>
 					<div>

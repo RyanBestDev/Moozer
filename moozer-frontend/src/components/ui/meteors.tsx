@@ -1,6 +1,5 @@
 import { cn } from '@/lib/utils';
 
-// Define an array of complementary colors
 const meteorColors = [
 	'#B08968', // Soft brown
 	'#E9C46A', // Warm gold
